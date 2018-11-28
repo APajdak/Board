@@ -1,11 +1,20 @@
 const path = require('path');
 const express = require('express');
-
+const mongoose = require('mongoose');
 const publicPath = path.join(__dirname, '../public')
 const port = process.env.PORT || 3000;
 
 let app = express();
 app.use(express.static(publicPath));
+
+mongoose.connect('mongodb://localhost/board')
+    .then(()=>{
+        console.log('Connected');
+    })
+    .catch(e=>{
+        console.log(e);
+    })
+
 
 app.get('/', (req,res)=>{
     res.send('Hello World')
