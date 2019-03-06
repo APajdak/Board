@@ -1,15 +1,18 @@
 const express = require("express");
 const mongoose = require("mongoose");
+
 const keys = require("./config/keys");
-let app = express();
+const users = require("./routes/user");
 
-mongoose.connect(keys.MONGODB_URL, { useNewUrlParser: true }).then(() => {
-  console.log("Connected to DB");
-});
+const app = express();
 
-app.get("/", (req, res) => {
-  res.send("Hello World");
-});
+mongoose
+  .connect(keys.MONGODB_URL, { useNewUrlParser: true })
+  .then(() => console.log("Connected to DB"))
+  .catch(err => console.log("Could not connect to DB"));
+
+app.use(express.json());
+app.use("/api/users", users);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
