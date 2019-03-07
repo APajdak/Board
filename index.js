@@ -10,6 +10,7 @@ mongoose
   .connect(keys.MONGODB_URL, { useNewUrlParser: true })
   .then(() => console.log("Connected to DB"))
   .catch(err => console.log("Could not connect to DB"));
+mongoose.set("useCreateIndex", true);
 
 app.use(express.json());
 app.use("/api/users", users);
