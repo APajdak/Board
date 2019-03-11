@@ -1,6 +1,6 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
-const { User } = require("../models/user");
+const { User, validate } = require("../models/user");
 const router = express.Router();
 
 router.get("/", (req, res) => {
@@ -8,19 +8,21 @@ router.get("/", (req, res) => {
 });
 
 router.post("/", async (req, res) => {
+  const { error } = validate(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+
   let user = await User.findOne({ email: req.body.email });
   if (user) return res.status(400).send("User Already exist");
 
   const { name, email, password } = req.body;
-  const salt = await bcrypt.genSalt(10);
-
-  const cryptedPassword = await bcrypt.hash(password, salt);
-  user = new User({ name, email, password: cryptedPassword });
+  user = new User({ name, email, password });
 
   await user.save();
 
-  console.log(user);
-
-  res.status("200").send("ok");
+  res.status("200").send({
+    id: user._id,
+    name: user.name,
+    email: user.email
+  });
 });
 module.exports = router;
