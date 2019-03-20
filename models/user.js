@@ -71,6 +71,5 @@ function validateUser(user) {
 
 module.exports = {
   User,
-  userSchema,
   validate: validateUser
 };

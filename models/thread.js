@@ -34,7 +34,7 @@ function threadValidation(thread) {
       .min(3)
       .max(255)
       .required(),
-    author: Joi.objectId().required()
+    authorId: Joi.objectId().required()
   };
   return Joi.validate(thread, schema);
 }

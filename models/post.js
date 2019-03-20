@@ -32,8 +32,8 @@ function postValidation(post) {
       .min(2)
       .max(2048)
       .required(),
-    author: Joi.objectId().required(),
-    thread: Joi.objectId().required()
+    authorId: Joi.objectId().required(),
+    threadId: Joi.objectId().required()
   };
   return Joi.validate(post, schema);
 }
