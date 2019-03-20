@@ -29,4 +29,24 @@ router.post("/", async (req, res) => {
     title: thread.title
   });
 });
+router.patch("/:id", async (req, res) => {
+  if (
+    !req.body.title ||
+    req.body.title.length <= 3 ||
+    req.body.title.length >= 255
+  ) {
+    return res
+      .status(400)
+      .send({ error: "Title is required and must have between 3- 255 chars" });
+  }
+
+  const thread = await Thread.findByIdAndUpdate(
+    req.params.id,
+    { title: req.body.title },
+    { new: true }
+  );
+  if (!thread) return res.status(404).send({ error: "Thread not found" });
+
+  res.send(thread);
+});
 module.exports = router;
