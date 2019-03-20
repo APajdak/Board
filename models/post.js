@@ -8,7 +8,9 @@ const postSchema = new mongoose.Schema({
   },
   content: {
     type: String,
-    required: true
+    required: true,
+    minlength: 2,
+    maxlength: 2048
   },
   author: {
     type: mongoose.Schema.Types.ObjectId,
@@ -25,6 +27,5 @@ const postSchema = new mongoose.Schema({
 const Post = mongoose.model("Post", postSchema);
 
 module.exports = {
-  Post,
-  validate: validatePost
+  Post
 };
