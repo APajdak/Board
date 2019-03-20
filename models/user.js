@@ -30,6 +30,10 @@ const userSchema = new mongoose.Schema({
   role: {
     type: String,
     default: "user"
+  },
+  posts: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User"
   }
 });
 
