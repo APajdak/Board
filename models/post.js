@@ -26,6 +26,19 @@ const postSchema = new mongoose.Schema({
 
 const Post = mongoose.model("Post", postSchema);
 
+function postValidation(post) {
+  const schema = {
+    content: Joi.string()
+      .min(2)
+      .max(2048)
+      .required(),
+    author: Joi.objectId().required(),
+    thread: Joi.objectId().required()
+  };
+  return Joi.validate(post, schema);
+}
+
 module.exports = {
-  Post
+  Post,
+  postValidation
 };
