@@ -24,4 +24,11 @@ router.post("/", async (req, res) => {
     email: user.email
   });
 });
+
+router.get("/:id", async (req, res) => {
+  const user = await User.findById(req.params.id);
+  const { role, _id, name, email, registeredAt } = user;
+  res.send({ role, _id, name, email, registeredAt });
+});
+
 module.exports = router;
