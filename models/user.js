@@ -33,10 +33,13 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: "user"
   },
-  posts: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User"
-  }
+  posts: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      required: false,
+      ref: "Post"
+    }
+  ]
 });
 
 userSchema.pre("save", async function(next) {

@@ -24,6 +24,28 @@ const postSchema = new mongoose.Schema({
   }
 });
 
+postSchema.pre("save", function(next) {
+  const post = this;
+  post
+    .model("Thread")
+    .updateOne({ _id: post.thread }, { $push: { posts: post._id } }, next);
+  post
+    .model("User")
+    .updateOne({ _id: post.author }, { $push: { posts: post._id } }, next);
+});
+
+postSchema.pre("remove", function(next) {
+  this.model("Thread").updateOne(
+    { posts: this._id },
+    { $pull: { posts: { $in: [this._id] } } },
+    next
+  );
+  this.model("User").updateOne(
+    { posts: this._id },
+    { $pull: { posts: { $in: [this._id] } } },
+    next
+  );
+});
 const Post = mongoose.model("Post", postSchema);
 
 function postValidation(post) {

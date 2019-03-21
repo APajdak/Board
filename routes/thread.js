@@ -2,7 +2,6 @@ const express = require("express");
 const { Thread, threadValidation } = require("../models/thread");
 const router = express.Router();
 const isLogged = require("../middlewares/isLogged");
-const isAdmin = require("../middlewares/isAdmin");
 
 router.get("/:id", async (req, res) => {
   const thread = await Thread.findById(req.params.id).populate({
@@ -17,7 +16,7 @@ router.get("/:id", async (req, res) => {
   res.send(thread);
 });
 
-router.post("/", [isLogged, isAdmin], async (req, res) => {
+router.post("/", isLogged, async (req, res) => {
   const { error } = threadValidation(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
