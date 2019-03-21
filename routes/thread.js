@@ -2,6 +2,7 @@ const express = require("express");
 const { Thread, threadValidation } = require("../models/thread");
 const router = express.Router();
 const isLogged = require("../middlewares/isLogged");
+const isAdmin = require("../middlewares/isAdmin");
 
 router.get("/:id", async (req, res) => {
   const thread = await Thread.findById(req.params.id).populate({
@@ -30,6 +31,16 @@ router.post("/", isLogged, async (req, res) => {
     title: thread.title
   });
 });
+
+router.delete("/:id", [isLogged, isAdmin], async (req, res) => {
+  const thread = await Thread.findById(req.params.id);
+  if (!thread) {
+    return res.status(404).send("Thread with the given ID was not found.");
+  }
+  await thread.remove();
+  res.send(thread);
+});
+
 router.patch("/:id", isLogged, async (req, res) => {
   if (
     !req.body.title ||

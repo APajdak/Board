@@ -26,6 +26,24 @@ const threadSchema = new mongoose.Schema({
   ]
 });
 
+threadSchema.pre("remove", function(next) {
+  const thread = this;
+  thread.model("Post").find(
+    {
+      thread: thread._id
+    },
+    (err, posts) => {
+      if (err) {
+        return next(err);
+      }
+      for (var post in posts) {
+        posts[post].remove();
+      }
+    }
+  );
+  next();
+});
+
 const Thread = mongoose.model("Thread", threadSchema);
 
 function threadValidation(thread) {

@@ -39,10 +39,11 @@ router.get("/:id", isLogged, async (req, res) => {
 
 router.delete("/:id", [isLogged], async (req, res) => {
   if (req.user._id === req.params.id || req.user.role === "admin") {
-    const user = await User.findByIdAndDelete(req.params.id);
+    const user = await User.findById(req.params.id);
     if (!user) {
       return res.status(404).send("User with the given ID was not found.");
     }
+    await user.remove();
     res.send(user);
   } else {
     return res.status(403).send("Access denied.");
