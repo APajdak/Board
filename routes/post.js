@@ -2,12 +2,13 @@ const express = require("express");
 const { Post, postValidation } = require("../models/post");
 const { Thread } = require("../models/thread");
 const router = express.Router();
+const checkToken = require("../middlewares/isLogged");
 
 router.get("/", (req, res) => {
   res.send("hi");
 });
 
-router.post("/", async (req, res) => {
+router.post("/", checkToken, async (req, res) => {
   const { error } = postValidation(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 

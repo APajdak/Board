@@ -18,11 +18,15 @@ router.post("/", async (req, res) => {
 
   await user.save();
 
-  res.status("200").send({
-    id: user._id,
-    name: user.name,
-    email: user.email
-  });
+  const token = user.createToken();
+  res
+    .status("200")
+    .header("x-access-token", `Bearer ${token}`)
+    .send({
+      id: user._id,
+      name: user.name,
+      email: user.email
+    });
 });
 
 router.get("/:id", async (req, res) => {
