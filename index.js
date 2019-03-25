@@ -2,6 +2,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const Joi = require("joi");
 Joi.objectId = require("joi-objectid")(Joi);
+const cors = require("cors");
+const volleyball = require("volleyball");
 
 const keys = require("./config/keys");
 
@@ -19,12 +21,14 @@ mongoose
 mongoose.set("useCreateIndex", true);
 
 app.use(express.json());
+app.use(cors({ origin: keys.CLIENT, exposedHeaders: "x-access-token" }));
+app.use(volleyball);
 app.use("/api/users", users);
 app.use("/api/threads", threads);
 app.use("/api/posts", posts);
 app.use("/api/auth", auth);
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4000;
 app.listen(port, () => {
   console.log(`Server is up on port ${port}`);
 });
