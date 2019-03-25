@@ -13,7 +13,7 @@ router.post("/", async (req, res) => {
   if (error) return res.status(400).send(error.details[0].message);
 
   let user = await User.findOne({ email: req.body.email });
-  if (user) return res.status(400).send("User already exist");
+  if (user) return res.status(400).send({ errorMessage: "User already exist" });
 
   const { name, email, password } = req.body;
   user = new User({ name, email, password });
@@ -21,14 +21,12 @@ router.post("/", async (req, res) => {
   await user.save();
 
   const token = user.createToken();
-  res
-    .status("200")
-    .header("x-access-token", `Bearer ${token}`)
-    .send({
-      id: user._id,
-      name: user.name,
-      email: user.email
-    });
+  res.status("200").send({
+    id: user._id,
+    name: user.name,
+    email: user.email,
+    token
+  });
 });
 
 router.get("/:id", isLogged, async (req, res) => {

@@ -2,7 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter, Route } from "react-router-dom";
 import { Provider } from "react-redux";
-import { createStore } from "redux";
+import { createStore, applyMiddleware } from "redux";
+import reduxThunk from "redux-thunk";
 
 import App from "./components/App";
 import reducers from "./reducers";
@@ -11,7 +12,7 @@ import Signout from "./components/auth/Signout";
 import Signin from "./components/auth/Signin";
 import Signup from "./components/auth/Signup";
 
-const store = createStore(reducers, {});
+const store = createStore(reducers, {}, applyMiddleware(reduxThunk));
 
 ReactDOM.render(
   <Provider store={store}>
