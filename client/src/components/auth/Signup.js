@@ -4,6 +4,9 @@ import { reduxForm, Field } from "redux-form";
 import { compose } from "redux";
 import * as actions from "../../actions";
 
+import formFields from "../../config/authFormFields";
+import FormField from "./FormField";
+
 class Signup extends Component {
   onSubmit = formProps => {
     this.props.signup(formProps, () => {
@@ -11,47 +14,27 @@ class Signup extends Component {
     });
   };
 
+  renderFields() {
+    return formFields.map(({ label, name, type }, index) => {
+      return (
+        <Field
+          key={index}
+          component={FormField}
+          label={label}
+          name={name}
+          type={type}
+          autoComplete="none"
+        />
+      );
+    });
+  }
+
   render() {
     const { handleSubmit } = this.props;
 
     return (
       <form onSubmit={handleSubmit(this.onSubmit)}>
-        <fieldset>
-          <label>User name</label>
-          <Field
-            name="name"
-            type="text"
-            component="input"
-            autoComplete="none"
-          />
-        </fieldset>
-        <fieldset>
-          <label>Email</label>
-          <Field
-            name="email"
-            type="text"
-            component="input"
-            autoComplete="none"
-          />
-        </fieldset>
-        <fieldset>
-          <label>Password</label>
-          <Field
-            name="password"
-            type="password"
-            component="input"
-            autoComplete="none"
-          />
-        </fieldset>
-        <fieldset>
-          <label>Confirm Password</label>
-          <Field
-            name="confirmPassword"
-            type="password"
-            component="input"
-            autoComplete="none"
-          />
-        </fieldset>
+        {this.renderFields()}
         <div>{this.props.errorMessage}</div>
         <button>Sign up</button>
       </form>

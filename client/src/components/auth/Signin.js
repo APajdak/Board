@@ -4,6 +4,9 @@ import { reduxForm, Field } from "redux-form";
 import { compose } from "redux";
 import * as actions from "../../actions";
 
+import formFields from "../../config/authFormFields";
+import FormField from "./FormField";
+
 class Signin extends Component {
   onSubmit = formProps => {
     this.props.signin(formProps, () => {
@@ -11,29 +14,29 @@ class Signin extends Component {
     });
   };
 
+  renderFields() {
+    return formFields
+      .filter(({ name }) => name !== "userName" && name !== "confirmPassword")
+      .map(({ label, name, type }, index) => {
+        return (
+          <Field
+            key={index}
+            component={FormField}
+            label={label}
+            name={name}
+            type={type}
+            autoComplete="none"
+          />
+        );
+      });
+  }
+
   render() {
     const { handleSubmit } = this.props;
 
     return (
       <form onSubmit={handleSubmit(this.onSubmit)}>
-        <fieldset>
-          <label>Email</label>
-          <Field
-            name="email"
-            type="text"
-            component="input"
-            autoComplete="none"
-          />
-        </fieldset>
-        <fieldset>
-          <label>Password</label>
-          <Field
-            name="password"
-            type="password"
-            component="input"
-            autoComplete="none"
-          />
-        </fieldset>
+        {this.renderFields()}
         <div>{this.props.errorMessage}</div>
         <button>Sign in</button>
       </form>
