@@ -16,6 +16,18 @@ export const signup = (
   }
 };
 
+export const signin = ({ email, password }, callback) => async dispatch => {
+  try {
+    const response = await API.post("/auth/", { email, password });
+    localStorage.setItem("token", response.data.token);
+    localStorage.setItem("user", response.data.name);
+    dispatch({ type: AUTH_USER, payload: response.data.token });
+    callback();
+  } catch (ex) {
+    dispatch({ type: AUTH_ERROR, payload: "Invalid email or password" });
+  }
+};
+
 export const signout = callback => {
   localStorage.removeItem("token");
   localStorage.removeItem("user");
