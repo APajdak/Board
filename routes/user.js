@@ -22,9 +22,7 @@ router.post("/", async (req, res) => {
 
   const token = user.createToken();
   res.status("200").send({
-    id: user._id,
     name: user.name,
-    email: user.email,
     token
   });
 });

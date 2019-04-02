@@ -3,12 +3,13 @@ import { Link } from "react-router-dom";
 
 class Header extends React.Component {
   renderLinks() {
-    let auth = false;
-    if (auth) {
+    if (localStorage.token) {
       return (
         <div>
-          <span>Nick Name</span>
-          <Link to="/signout">Sign out</Link>
+          <span>
+            Logged as: <Link to="/Me">{localStorage.getItem("user")}</Link>
+          </span>
+          <Link to="/signout"> Sign out</Link>
         </div>
       );
     } else {

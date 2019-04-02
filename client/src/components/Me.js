@@ -1,9 +1,10 @@
 import React, { Component } from "react";
+import isLogged from "./auth";
 
 class Me extends Component {
   render() {
-    return <div>Me</div>;
+    return <div>{localStorage.getItem("user")}</div>;
   }
 }
 
-export default Me;
+export default isLogged(Me);
