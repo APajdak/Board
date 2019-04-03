@@ -14,9 +14,15 @@ class Signin extends Component {
     });
   };
 
+  componentDidMount() {
+    if (this.props.authenticated) {
+      this.props.history.push("/me");
+    }
+  }
+
   renderFields() {
     return formFields
-      .filter(({ name }) => name !== "userName" && name !== "confirmPassword")
+      .filter(({ name }) => name !== "name" && name !== "confirmPassword")
       .map(({ label, name, type }, index) => {
         return (
           <Field
@@ -45,7 +51,10 @@ class Signin extends Component {
 }
 
 function mapStateToProps(state) {
-  return { errorMessage: state.auth.errorMessage };
+  return {
+    errorMessage: state.auth.errorMessage,
+    authenticated: state.auth.authenticated
+  };
 }
 
 export default compose(

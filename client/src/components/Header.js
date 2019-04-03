@@ -8,7 +8,7 @@ class Header extends React.Component {
       return (
         <div>
           <span>
-            Logged as: <Link to="/Me">{localStorage.getItem("user")}</Link>
+            Logged as: <Link to="/me">{this.props.userName}</Link>
           </span>
           <Link to="/signout"> Sign out</Link>
         </div>
@@ -28,7 +28,7 @@ class Header extends React.Component {
   }
 }
 function mapStateToProps(state) {
-  return { authenticated: state.auth.authenticated };
+  return { authenticated: state.auth.authenticated, userName: state.auth.user };
 }
 
 export default connect(mapStateToProps)(Header);

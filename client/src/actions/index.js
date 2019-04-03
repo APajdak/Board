@@ -9,7 +9,7 @@ export const signup = (
     const response = await API.post("/users/", { name, email, password });
     localStorage.setItem("token", response.data.token);
     localStorage.setItem("user", response.data.name);
-    dispatch({ type: AUTH_USER, payload: response.data.token });
+    dispatch({ type: AUTH_USER, payload: response.data });
     callback();
   } catch (ex) {
     dispatch({ type: AUTH_ERROR, payload: "User already exist" });
@@ -21,7 +21,7 @@ export const signin = ({ email, password }, callback) => async dispatch => {
     const response = await API.post("/auth/", { email, password });
     localStorage.setItem("token", response.data.token);
     localStorage.setItem("user", response.data.name);
-    dispatch({ type: AUTH_USER, payload: response.data.token });
+    dispatch({ type: AUTH_USER, payload: response.data });
     callback();
   } catch (ex) {
     dispatch({ type: AUTH_ERROR, payload: "Invalid email or password" });
