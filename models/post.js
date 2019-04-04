@@ -20,7 +20,7 @@ const postSchema = new mongoose.Schema({
   thread: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
-    ref: "Post"
+    ref: "Thread"
   }
 });
 

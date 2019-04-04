@@ -4,7 +4,16 @@ const { Thread } = require("../models/thread");
 const router = express.Router();
 const isLogged = require("../middlewares/isLogged");
 
+router.get("/", isLogged, async (req, res) => {
+  const posts = await Post.find({ author: req.user._id }).populate({
+    path: "thread",
+    select: "title"
+  });
+  res.json(posts);
+});
+
 router.post("/", isLogged, async (req, res) => {
+  req.body.authorId = req.user._id;
   const { error } = postValidation(req.body);
   if (error) return res.status(400).send(error.details[0].message);
   const { content, authorId, threadId } = req.body;
