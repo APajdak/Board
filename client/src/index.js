@@ -11,7 +11,7 @@ import reducers from "./reducers";
 import Signout from "./components/auth/Signout";
 import Signin from "./components/auth/Signin";
 import Signup from "./components/auth/Signup";
-import Me from "./components/Me";
+import User from "./components/user/User";
 
 const store = createStore(reducers, {}, applyMiddleware(reduxThunk));
 
@@ -22,7 +22,7 @@ ReactDOM.render(
         <Route path="/signin" component={Signin} />
         <Route path="/signout" component={Signout} />
         <Route path="/signup" component={Signup} />
-        <Route path="/me" component={Me} />
+        <Route path="/profile/:slug" component={User} />
       </App>
     </BrowserRouter>
   </Provider>,

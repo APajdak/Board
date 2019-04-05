@@ -8,7 +8,7 @@ export const signup = (
   try {
     const response = await API.post("/users/", { name, email, password });
     localStorage.setItem("token", response.data.token);
-    localStorage.setItem("user", response.data.name);
+    localStorage.setItem("user", JSON.stringify(response.data.user));
     dispatch({ type: AUTH_USER, payload: response.data });
     callback();
   } catch (ex) {
@@ -20,7 +20,7 @@ export const signin = ({ email, password }, callback) => async dispatch => {
   try {
     const response = await API.post("/auth/", { email, password });
     localStorage.setItem("token", response.data.token);
-    localStorage.setItem("user", response.data.name);
+    localStorage.setItem("user", JSON.stringify(response.data.user));
     dispatch({ type: AUTH_USER, payload: response.data });
     callback();
   } catch (ex) {

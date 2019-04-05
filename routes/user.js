@@ -3,11 +3,6 @@ const { User, validate } = require("../models/user");
 const router = express.Router();
 const isLogged = require("../middlewares/isLogged");
 
-router.get("/me", isLogged, async (req, res) => {
-  const user = await User.findById(req.user._id).select("-password");
-  res.send(user);
-});
-
 router.post("/", async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
@@ -27,10 +22,14 @@ router.post("/", async (req, res) => {
   });
 });
 
-router.get("/:id", isLogged, async (req, res) => {
-  const user = await User.findById(req.params.id);
-  const { role, _id, name, email, registeredAt } = user;
-  res.send({ role, _id, name, email, registeredAt });
+router.get("/:slug", isLogged, async (req, res) => {
+  const user = await User.findOne({ slug: req.params.slug }).select(
+    "-password"
+  );
+  if (!user) {
+    return res.status(404).send("User not found");
+  }
+  res.send(user);
 });
 
 router.delete("/:id", [isLogged], async (req, res) => {

@@ -1,12 +1,12 @@
 import { AUTH_USER, AUTH_ERROR } from "../actions/actionTypes";
 
 let token = localStorage.getItem("token");
-let user = localStorage.getItem("user");
+let user = JSON.parse(localStorage.getItem("user"));
 
 const INITIAL_STATE = {
   authenticated: token ? token : "",
   errorMessage: "",
-  user: user ? user : ""
+  user: user ? user : {}
 };
 
 export default function(state = INITIAL_STATE, action) {
@@ -16,7 +16,7 @@ export default function(state = INITIAL_STATE, action) {
         ...state,
         errorMessage: "",
         authenticated: action.payload.token,
-        user: action.payload.name
+        user: action.payload.user
       };
     case AUTH_ERROR:
       return { ...state, errorMessage: action.payload, authenticated: "" };

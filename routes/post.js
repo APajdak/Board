@@ -1,14 +1,21 @@
 const express = require("express");
 const { Post, postValidation } = require("../models/post");
+const { User } = require("../models/user");
 const { Thread } = require("../models/thread");
 const router = express.Router();
 const isLogged = require("../middlewares/isLogged");
 
-router.get("/", isLogged, async (req, res) => {
-  const posts = await Post.find({ author: req.user._id }).populate({
-    path: "thread",
-    select: "title"
-  });
+router.get("/:slug", isLogged, async (req, res) => {
+  const posts = await User.findOne({ slug: req.params.slug })
+    .select("posts")
+    .populate({
+      path: "posts",
+      select: "-author",
+      populate: {
+        path: "thread",
+        select: "title"
+      }
+    });
   res.json(posts);
 });
 
