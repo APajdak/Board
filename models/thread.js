@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Joi = require("joi");
+const generateSlug = require("../utils/generateSlug");
 
 const threadSchema = new mongoose.Schema({
   createdAt: {
@@ -17,6 +18,9 @@ const threadSchema = new mongoose.Schema({
     required: true,
     ref: "User"
   },
+  slug: {
+    type: String
+  },
   posts: [
     {
       type: mongoose.Schema.Types.ObjectId,
@@ -24,6 +28,12 @@ const threadSchema = new mongoose.Schema({
       ref: "Post"
     }
   ]
+});
+
+threadSchema.pre("save", function(next) {
+  const thread = this;
+  thread.slug = generateSlug(thread.title);
+  next();
 });
 
 threadSchema.pre("remove", function(next) {

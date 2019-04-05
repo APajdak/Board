@@ -3,6 +3,7 @@ const Joi = require("joi");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const keys = require("../config/keys");
+const generateSlug = require("../utils/generateSlug");
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -32,6 +33,9 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: "user"
   },
+  slug: {
+    type: String
+  },
   posts: [
     {
       type: mongoose.Schema.Types.ObjectId,
@@ -47,6 +51,7 @@ userSchema.pre("save", async function(next) {
     const salt = await bcrypt.genSalt(10);
     const cryptedPassword = await bcrypt.hash(user.password, salt);
     user.password = cryptedPassword;
+    user.slug = generateSlug(user.name);
     next();
   } catch (ex) {
     return next(ex);

@@ -13,7 +13,7 @@ router.get("/", isLogged, async (req, res) => {
 });
 
 router.post("/", isLogged, async (req, res) => {
-  req.body.authorId = req.user._id;
+  req.body = { ...req.body, authorId: req.user._id };
   const { error } = postValidation(req.body);
   if (error) return res.status(400).send(error.details[0].message);
   const { content, authorId, threadId } = req.body;
