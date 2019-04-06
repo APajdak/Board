@@ -34,7 +34,8 @@ const userSchema = new mongoose.Schema({
     default: "user"
   },
   slug: {
-    type: String
+    type: String,
+    required: false
   },
   posts: [
     {

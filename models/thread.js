@@ -19,7 +19,8 @@ const threadSchema = new mongoose.Schema({
     ref: "User"
   },
   slug: {
-    type: String
+    type: String,
+    required: false
   },
   posts: [
     {
