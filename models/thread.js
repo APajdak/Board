@@ -18,6 +18,11 @@ const threadSchema = new mongoose.Schema({
     required: true,
     ref: "User"
   },
+  forum: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: "Forum"
+  },
   slug: {
     type: String,
     required: false

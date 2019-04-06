@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Joi = require("joi");
 const generateSlug = require("../utils/generateSlug");
 
 const forumSchema = new mongooose.Schema({
@@ -29,6 +30,17 @@ forumSchema.pre("save", function(next) {
 
 const Forum = mongoose.model("Forum", forumSchema);
 
+function forumValidation(forum) {
+  const schema = {
+    name: Joi.string()
+      .min(3)
+      .max(255)
+      .required()
+  };
+  return Joi.validate(forum, schema);
+}
+
 module.exports = {
-  Forum
+  Forum,
+  forumValidation
 };
