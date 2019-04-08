@@ -27,6 +27,10 @@ const threadSchema = new mongoose.Schema({
     type: String,
     required: false
   },
+  latestUpdate: {
+    type: Date,
+    required: false
+  },
   posts: [
     {
       type: mongoose.Schema.Types.ObjectId,
@@ -39,6 +43,9 @@ const threadSchema = new mongoose.Schema({
 threadSchema.pre("save", function(next) {
   const thread = this;
   thread.slug = generateSlug(thread.title);
+  thread
+    .model("Forum")
+    .updateOne({ _id: thread.forum }, { $push: { threads: thread._id } }, next);
   next();
 });
 
@@ -68,7 +75,8 @@ function threadValidation(thread) {
       .min(3)
       .max(255)
       .required(),
-    authorId: Joi.objectId().required()
+    authorId: Joi.objectId().required(),
+    forumId: Joi.objectId().required()
   };
   return Joi.validate(thread, schema);
 }

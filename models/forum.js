@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Joi = require("joi");
 const generateSlug = require("../utils/generateSlug");
 
-const forumSchema = new mongooose.Schema({
+const forumSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,

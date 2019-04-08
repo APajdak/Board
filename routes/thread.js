@@ -1,5 +1,6 @@
 const express = require("express");
 const { Thread, threadValidation } = require("../models/thread");
+const { Forum } = require("../models/forum");
 const router = express.Router();
 const isLogged = require("../middlewares/isLogged");
 const isAdmin = require("../middlewares/isAdmin");
@@ -22,8 +23,12 @@ router.post("/", isLogged, async (req, res) => {
   const { error } = threadValidation(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
-  const { title, authorId } = req.body;
-  const thread = new Thread({ title, author: authorId });
+  const { title, authorId, forumId } = req.body;
+
+  const forum = await Forum.findById(forumId);
+  if (!forum) return res.status(400).send({ error: "Forum not found" });
+
+  const thread = new Thread({ title, author: authorId, forum: forumId });
 
   await thread.save();
 
