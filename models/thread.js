@@ -35,6 +35,11 @@ const threadSchema = new mongoose.Schema({
       type: Date,
       required: false
     },
+    postId: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: false,
+      ref: "Post"
+    },
     user: {
       type: mongoose.Schema.Types.ObjectId,
       required: false,

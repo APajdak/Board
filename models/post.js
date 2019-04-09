@@ -31,6 +31,7 @@ postSchema.pre("save", function(next) {
     {
       latestUpdate: {
         date: Date.now(),
+        postId: post._id,
         user: post.author
       },
       $push: { posts: post._id }
@@ -53,6 +54,28 @@ postSchema.pre("remove", function(next) {
     { $pull: { posts: { $in: [this._id] } } },
     next
   );
+});
+
+postSchema.post("remove", function(next) {
+  this.model("Thread")
+    .findOne({ _id: this.thread })
+    .exec(async (err, thread) => {
+      if (this._id.equals(thread.latestUpdate.postId)) {
+        try {
+          const newPost = await this.model("Post").findOne({
+            _id: thread.posts[thread.posts.length - 1]
+          });
+          thread.latestUpdate.postId = newPost ? newPost._id : null;
+          thread.latestUpdate.date = newPost ? newPost.createdAt : null;
+          thread.latestUpdate.user = newPost ? newPost.author : null;
+          thread.save();
+        } catch (ex) {
+          console.log(ex);
+        }
+      }
+    });
+
+  next;
 });
 const Post = mongoose.model("Post", postSchema);
 
