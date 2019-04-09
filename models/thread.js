@@ -10,12 +10,14 @@ const threadSchema = new mongoose.Schema({
   title: {
     type: String,
     required: true,
+    trim: true,
     minlength: 3,
     maxlength: 255
   },
   author: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
+    trim: true,
     ref: "User"
   },
   forum: {
@@ -25,11 +27,19 @@ const threadSchema = new mongoose.Schema({
   },
   slug: {
     type: String,
+    trim: true,
     required: false
   },
   latestUpdate: {
-    type: Date,
-    required: false
+    date: {
+      type: Date,
+      required: false
+    },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: false,
+      ref: "User"
+    }
   },
   posts: [
     {
@@ -59,11 +69,18 @@ threadSchema.pre("remove", function(next) {
       if (err) {
         return next(err);
       }
-      for (var post in posts) {
+      for (let post in posts) {
         posts[post].remove();
       }
     }
   );
+  thread
+    .model("Forum")
+    .update(
+      { threads: thread._id },
+      { $pull: { threads: { $in: [thread._id] } } },
+      next
+    );
   next();
 });
 

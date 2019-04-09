@@ -26,9 +26,17 @@ const postSchema = new mongoose.Schema({
 
 postSchema.pre("save", function(next) {
   const post = this;
-  post
-    .model("Thread")
-    .updateOne({ _id: post.thread }, { $push: { posts: post._id } }, next);
+  post.model("Thread").updateOne(
+    { _id: post.thread },
+    {
+      latestUpdate: {
+        date: Date.now(),
+        user: post.author
+      },
+      $push: { posts: post._id }
+    },
+    next
+  );
   post
     .model("User")
     .updateOne({ _id: post.author }, { $push: { posts: post._id } }, next);

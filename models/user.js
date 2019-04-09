@@ -22,6 +22,7 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
+    trim: true,
     minlength: 3,
     maxlength: 300
   },
@@ -31,10 +32,12 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
+    trim: true,
     default: "user"
   },
   slug: {
     type: String,
+    trim: true,
     required: false
   },
   posts: [

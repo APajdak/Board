@@ -6,11 +6,13 @@ const forumSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
+    trim: true,
     minlength: 3,
     maxlength: 255
   },
   slug: {
     type: String,
+    trim: true,
     required: false
   },
   threads: [

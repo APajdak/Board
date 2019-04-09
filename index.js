@@ -11,6 +11,7 @@ const users = require("./routes/user");
 const threads = require("./routes/thread");
 const posts = require("./routes/post");
 const auth = require("./routes/auth");
+const forum = require("./routes/forum");
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use(volleyball);
 app.use("/api/users", users);
 app.use("/api/threads", threads);
 app.use("/api/posts", posts);
+app.use("/api/forums", forum);
 app.use("/api/auth", auth);
 
 const port = process.env.PORT || 4000;
