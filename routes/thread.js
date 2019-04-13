@@ -1,70 +1,16 @@
 const express = require("express");
-const { Thread, threadValidation } = require("../models/thread");
-const { Forum } = require("../models/forum");
 const router = express.Router();
 const isLogged = require("../middlewares/isLogged");
 const isAdmin = require("../middlewares/isAdmin");
 
-router.get("/:id", async (req, res) => {
-  const thread = await Thread.findById(req.params.id).populate({
-    path: "posts",
-    select: "-thread",
-    populate: {
-      path: "author",
-      select: "-password -registeredAt"
-    }
-  });
-  if (!thread) return res.status(404).send("Thread not found");
-  res.send(thread);
-});
+const controller = require("../controllers/thread");
 
-router.post("/", isLogged, async (req, res) => {
-  req.body = { ...req.body, authorId: req.user._id };
-  const { error } = threadValidation(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
+router.get("/:slug", controller.getThreadPosts);
 
-  const { title, authorId, forumId } = req.body;
+router.post("/", isLogged, controller.addNewThread);
 
-  const forum = await Forum.findById(forumId);
-  if (!forum) return res.status(400).send({ error: "Forum not found" });
+router.delete("/:id", [isLogged, isAdmin], controller.deleteThread);
 
-  const thread = new Thread({ title, author: authorId, forum: forumId });
+router.patch("/:id", isLogged, controller.updateThread);
 
-  await thread.save();
-
-  res.status("200").send({
-    id: thread._id,
-    title: thread.title
-  });
-});
-
-router.delete("/:id", [isLogged, isAdmin], async (req, res) => {
-  const thread = await Thread.findById(req.params.id);
-  if (!thread) {
-    return res.status(404).send("Thread with the given ID was not found.");
-  }
-  await thread.remove();
-  res.send(thread);
-});
-
-router.patch("/:id", isLogged, async (req, res) => {
-  if (
-    !req.body.title ||
-    req.body.title.length <= 3 ||
-    req.body.title.length >= 255
-  ) {
-    return res
-      .status(400)
-      .send({ error: "Title is required and must have between 3- 255 chars" });
-  }
-
-  const thread = await Thread.findByIdAndUpdate(
-    req.params.id,
-    { title: req.body.title },
-    { new: true }
-  );
-  if (!thread) return res.status(404).send({ error: "Thread not found" });
-
-  res.send(thread);
-});
 module.exports = router;
