@@ -12,6 +12,7 @@ const threads = require("./routes/thread");
 const posts = require("./routes/post");
 const auth = require("./routes/auth");
 const forum = require("./routes/forum");
+const errorHandler = require("./errors/errorHandler");
 
 const app = express();
 
@@ -29,6 +30,8 @@ app.use("/api/threads", threads);
 app.use("/api/posts", posts);
 app.use("/api/forums", forum);
 app.use("/api/auth", auth);
+
+app.use(errorHandler);
 
 const port = process.env.PORT || 4000;
 app.listen(port, () => {

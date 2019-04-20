@@ -1,11 +1,19 @@
 const { User, validate } = require("../models/user");
+const BadRequestError = require("../errors/BadRequestError");
+const NotFoundError = require("../errors/NotFoundError");
+const ForbiddenError = require("../errors/ForbiddenError");
+const ApplicationError = require("../errors/ApplicationError");
 
 const registerUser = async (req, res, next) => {
   const { error } = validate(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
+  if (error) return next(new BadRequestError(error.details[0].message));
 
-  let user = await User.findOne({ email: req.body.email });
-  if (user) return res.status(400).send({ errorMessage: "User already exist" });
+  try {
+    let user = await User.findOne({ email: req.body.email });
+    if (user) return next(new BadRequestError("User already exist"));
+  } catch (err) {
+    return next(new ApplicationError(err.message));
+  }
 
   const { name, email, password } = req.body;
   user = new User({ name, email, password });
@@ -24,7 +32,7 @@ const getUserInfo = async (req, res, next) => {
     "-password"
   );
   if (!user) {
-    return res.status(404).send("User not found");
+    return next(new NotFoundError("User not found"));
   }
   res.send(user);
 };
@@ -33,12 +41,12 @@ const deleteUser = async (req, res, next) => {
   if (req.user.slug === req.params.slug || req.user.role === "admin") {
     const user = await User.findOne({ slug: req.params.slug });
     if (!user) {
-      return res.status(404).send("User not found");
+      return next(new NotFoundError("User not found"));
     }
     await user.remove();
     res.send(user);
   } else {
-    return res.status(403).send("Access denied.");
+    return next(new ForbiddenError("Access denied."));
   }
 };
 
