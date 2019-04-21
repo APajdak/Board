@@ -1,7 +1,9 @@
 const { Thread, threadValidation } = require("../models/thread");
 const { Forum } = require("../models/forum");
+const NotFoundError = require("../errors/NotFoundError");
+const BadRequestError = require("../errors/BadRequestError");
 
-const getThreadPosts = async (req, res) => {
+const getThreadPosts = async (req, res, next) => {
   const thread = await Thread.findOne({ slug: req.params.slug }).populate({
     path: "posts",
     select: "-thread",
@@ -10,19 +12,19 @@ const getThreadPosts = async (req, res) => {
       select: "-password -registeredAt"
     }
   });
-  if (!thread) return res.status(404).send("Thread not found");
+  if (!thread) return next(new NotFoundError("Thread not found"));
   res.send(thread);
 };
 
-const addNewThread = async (req, res) => {
+const addNewThread = async (req, res, next) => {
   req.body = { ...req.body, authorId: req.user._id };
   const { error } = threadValidation(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
+  if (error) return next(new BadRequestError(error.details[0].message));
 
   const { title, authorId, forumId } = req.body;
 
   const forum = await Forum.findById(forumId);
-  if (!forum) return res.status(400).send({ error: "Forum not found" });
+  if (!forum) return next(new BadRequestError("Forum not found"));
 
   const thread = new Thread({ title, author: authorId, forum: forumId });
 
@@ -34,16 +36,16 @@ const addNewThread = async (req, res) => {
   });
 };
 
-const deleteThread = async (req, res) => {
+const deleteThread = async (req, res, next) => {
   const thread = await Thread.findById(req.params.id);
   if (!thread) {
-    return res.status(404).send("Thread with the given ID was not found.");
+    return next(new NotFoundError("Thread with the given ID was not found."));
   }
   await thread.remove();
   res.send(thread);
 };
 
-const updateThread = async (req, res) => {
+const updateThread = async (req, res, next) => {
   if (
     !req.body.title ||
     req.body.title.length <= 3 ||
@@ -59,7 +61,7 @@ const updateThread = async (req, res) => {
     { title: req.body.title },
     { new: true }
   );
-  if (!thread) return res.status(404).send({ error: "Thread not found" });
+  if (!thread) return next(new NotFoundError("Thread not found"));
 
   res.send(thread);
 };

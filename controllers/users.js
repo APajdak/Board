@@ -2,18 +2,13 @@ const { User, validate } = require("../models/user");
 const BadRequestError = require("../errors/BadRequestError");
 const NotFoundError = require("../errors/NotFoundError");
 const ForbiddenError = require("../errors/ForbiddenError");
-const ApplicationError = require("../errors/ApplicationError");
 
 const registerUser = async (req, res, next) => {
   const { error } = validate(req.body);
   if (error) return next(new BadRequestError(error.details[0].message));
 
-  try {
-    let user = await User.findOne({ email: req.body.email });
-    if (user) return next(new BadRequestError("User already exist"));
-  } catch (err) {
-    return next(new ApplicationError(err.message));
-  }
+  let user = await User.findOne({ email: req.body.email });
+  if (user) return next(new BadRequestError("User already exist"));
 
   const { name, email, password } = req.body;
   user = new User({ name, email, password });
@@ -31,6 +26,7 @@ const getUserInfo = async (req, res, next) => {
   const user = await User.findOne({ slug: req.params.slug }).select(
     "-password"
   );
+
   if (!user) {
     return next(new NotFoundError("User not found"));
   }

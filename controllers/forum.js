@@ -1,6 +1,8 @@
 const { Forum, forumValidation } = require("../models/forum");
+const BadRequestError = require("../errors/BadRequestError");
+const NotFoundError = require("../errors/NotFoundError");
 
-const getForumThreads = async (req, res) => {
+const getForumThreads = async (req, res, next) => {
   const forum = await Forum.findOne({ slug: req.params.slug })
     .select("_id")
     .populate({
@@ -20,12 +22,13 @@ const getForumThreads = async (req, res) => {
         select: "name slug -_id"
       }
     });
+  if (!forum) return next(new NotFoundError("Forum not found"));
   res.send(forum);
 };
 
-const addNewForum = async (req, res) => {
+const addNewForum = async (req, res, next) => {
   const { error } = forumValidation(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
+  if (error) return next(new BadRequestError(error.details[0].message));
 
   const forum = new Forum({ name: req.body.name });
   await forum.save();
