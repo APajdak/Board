@@ -1,11 +1,11 @@
 const { User } = require("../models/user");
 const bcrypt = require("bcrypt");
-const Joi = require("joi");
 const BadRequestError = require("../errors/BadRequestError");
+const loginValidation = require("../validation/login");
 
 const logIn = async (req, res, next) => {
-  const { error } = validate(req.body);
-  if (error) return next(new BadRequestError(error.details[0].message));
+  const { isValid, errors } = loginValidation(req.body);
+  if (!isValid) return next(new BadRequestError("Invalid login data", errors));
 
   let user = await User.findOne({ email: req.body.email });
   if (!user) return next(new BadRequestError("Invalid email or password"));
@@ -18,22 +18,6 @@ const logIn = async (req, res, next) => {
 
   res.json({ user: { name: user.name, slug: user.slug }, token });
 };
-
-function validate(req) {
-  const schema = {
-    email: Joi.string()
-      .min(5)
-      .required()
-      .email(),
-    password: Joi.string()
-      .min(5)
-      .max(300)
-      .required()
-  };
-
-  return Joi.validate(req, schema);
-}
-
 module.exports = {
   logIn
 };

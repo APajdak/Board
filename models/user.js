@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const Joi = require("joi");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const keys = require("../config/keys");
@@ -67,25 +66,7 @@ userSchema.methods.createToken = function() {
 };
 
 const User = mongoose.model("User", userSchema);
-function validateUser(user) {
-  const schema = {
-    name: Joi.string()
-      .min(2)
-      .max(50)
-      .required(),
-    email: Joi.string()
-      .required()
-      .email(),
-    password: Joi.string()
-      .min(3)
-      .max(255)
-      .required()
-  };
-
-  return Joi.validate(user, schema);
-}
 
 module.exports = {
-  User,
-  validate: validateUser
+  User
 };
