@@ -2,10 +2,12 @@ const { User, validate } = require("../models/user");
 const BadRequestError = require("../errors/BadRequestError");
 const NotFoundError = require("../errors/NotFoundError");
 const ForbiddenError = require("../errors/ForbiddenError");
+const userValidation = require("../validation/registerUser");
 
 const registerUser = async (req, res, next) => {
-  const { error } = validate(req.body);
-  if (error) return next(new BadRequestError(error.details[0].message));
+  const { isValid, errors } = userValidation(req.body);
+  if (!isValid)
+    return next(new BadRequestError("Invalid register data", errors));
 
   let user = await User.findOne({ email: req.body.email });
   if (user) return next(new BadRequestError("User already exist"));
