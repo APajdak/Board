@@ -79,19 +79,6 @@ postSchema.post("remove", function(next) {
 });
 const Post = mongoose.model("Post", postSchema);
 
-function postValidation(post) {
-  const schema = {
-    content: Joi.string()
-      .min(2)
-      .max(2048)
-      .required(),
-    authorId: Joi.objectId().required(),
-    threadId: Joi.objectId().required()
-  };
-  return Joi.validate(post, schema);
-}
-
 module.exports = {
-  Post,
-  postValidation
+  Post
 };

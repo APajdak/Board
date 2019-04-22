@@ -91,19 +91,6 @@ threadSchema.pre("remove", function(next) {
 
 const Thread = mongoose.model("Thread", threadSchema);
 
-function threadValidation(thread) {
-  const schema = {
-    title: Joi.string()
-      .min(3)
-      .max(255)
-      .required(),
-    authorId: Joi.objectId().required(),
-    forumId: Joi.objectId().required()
-  };
-  return Joi.validate(thread, schema);
-}
-
 module.exports = {
-  Thread,
-  threadValidation
+  Thread
 };

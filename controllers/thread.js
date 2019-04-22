@@ -1,7 +1,8 @@
-const { Thread, threadValidation } = require("../models/thread");
+const { Thread } = require("../models/thread");
 const { Forum } = require("../models/forum");
 const NotFoundError = require("../errors/NotFoundError");
 const BadRequestError = require("../errors/BadRequestError");
+const threadValidation = require("../validation/threadValidation");
 
 const getThreadPosts = async (req, res, next) => {
   const thread = await Thread.findOne({ slug: req.params.slug }).populate({
@@ -18,8 +19,9 @@ const getThreadPosts = async (req, res, next) => {
 
 const addNewThread = async (req, res, next) => {
   req.body = { ...req.body, authorId: req.user._id };
-  const { error } = threadValidation(req.body);
-  if (error) return next(new BadRequestError(error.details[0].message));
+
+  const { isValid, errors } = threadValidation(req.body);
+  if (!isValid) return next(new BadRequestError("Invalid thread data", errors));
 
   const { title, authorId, forumId } = req.body;
 

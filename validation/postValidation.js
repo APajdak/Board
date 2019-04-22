@@ -3,8 +3,6 @@ const isEmpty = require("./isEmpty");
 const hasProperLength = require("./hasProperLength");
 const ObjectId = require("mongoose").Types.ObjectId;
 
-//ObjectId.isValid
-
 module.exports = ({ content, threadId, authorId }) => {
   const errors = {};
 
