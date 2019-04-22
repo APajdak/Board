@@ -1,9 +1,10 @@
-const { Post, postValidation } = require("../models/post");
+const { Post } = require("../models/post");
 const { User } = require("../models/user");
 const { Thread } = require("../models/thread");
 const NotFoundError = require("../errors/NotFoundError");
 const BadRequestError = require("../errors/BadRequestError");
 const ForbiddenError = require("../errors/ForbiddenError");
+const postValidation = require("../validation/postValidation");
 
 const getUserPosts = async (req, res, next) => {
   const posts = await User.findOne({ slug: req.params.slug })
@@ -22,8 +23,9 @@ const getUserPosts = async (req, res, next) => {
 
 const addNewPost = async (req, res, next) => {
   req.body = { ...req.body, authorId: req.user._id };
-  const { error } = postValidation(req.body);
-  if (error) return next(new BadRequestError(error.details[0].message));
+  const { isValid, errors } = postValidation(req.body);
+  if (!isValid) return next(new BadRequestError("Invalid post data", errors));
+
   const { content, authorId, threadId } = req.body;
 
   const thread = await Thread.findById(threadId);
