@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const Joi = require("joi");
+const ApplicationError = require("../errors/ApplicationError");
 
 const postSchema = new mongoose.Schema({
   createdAt: {
@@ -60,6 +60,7 @@ postSchema.post("remove", function(next) {
   this.model("Thread")
     .findOne({ _id: this.thread })
     .exec(async (err, thread) => {
+      if (err) return next(new ApplicationError());
       if (this._id.equals(thread.latestUpdate.postId)) {
         try {
           const newPost = await this.model("Post").findOne({
@@ -70,7 +71,7 @@ postSchema.post("remove", function(next) {
           thread.latestUpdate.user = newPost ? newPost.author : null;
           thread.save();
         } catch (ex) {
-          console.log(ex);
+          return next(new ApplicationError());
         }
       }
     });

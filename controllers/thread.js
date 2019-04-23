@@ -65,7 +65,7 @@ const updateThread = async (req, res, next) => {
   );
   if (!thread) return next(new NotFoundError("Thread not found"));
 
-  res.send(thread);
+  res.json(thread);
 };
 
 module.exports = {

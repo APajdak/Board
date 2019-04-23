@@ -1,7 +1,5 @@
 const express = require("express");
 require("express-async-errors");
-const Joi = require("joi");
-Joi.objectId = require("joi-objectid")(Joi);
 const cors = require("cors");
 const volleyball = require("volleyball");
 

@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const keys = require("../config/keys");
+const { JWT_SECRET } = require("../config/keys");
 const generateSlug = require("../utils/generateSlug");
 
 const userSchema = new mongoose.Schema({
@@ -62,7 +62,10 @@ userSchema.pre("save", async function(next) {
 });
 
 userSchema.methods.createToken = function() {
-  return jwt.sign({ _id: this._id, role: this.role }, keys.JWT_SECRET);
+  return jwt.sign(
+    { _id: this._id, role: this.role, slug: this.slug },
+    JWT_SECRET
+  );
 };
 
 const User = mongoose.model("User", userSchema);

@@ -1,8 +1,9 @@
 const { User } = require("../models/user");
 const BadRequestError = require("../errors/BadRequestError");
 const NotFoundError = require("../errors/NotFoundError");
-const ForbiddenError = require("../errors/ForbiddenError");
+const isEmpty = require("../validation/isEmpty");
 const userValidation = require("../validation/registerUser");
+const updateUserValidation = require("../validation/updateUser");
 
 const registerUser = async (req, res, next) => {
   const { isValid, errors } = userValidation(req.body);
@@ -36,20 +37,32 @@ const getUserInfo = async (req, res, next) => {
 };
 
 const deleteUser = async (req, res, next) => {
-  if (req.user.slug === req.params.slug || req.user.role === "admin") {
-    const user = await User.findOne({ slug: req.params.slug });
-    if (!user) {
-      return next(new NotFoundError("User not found"));
-    }
-    await user.remove();
-    res.send(user);
-  } else {
-    return next(new ForbiddenError("Access denied."));
+  const user = await User.findOne({ slug: req.params.slug });
+  if (!user) {
+    return next(new NotFoundError("User not found"));
   }
+  await user.remove();
+  res.send(user);
+};
+
+const updateUser = async (req, res, next) => {
+  const { isValid, errors } = updateUserValidation(req.body);
+  if (!isValid) return next(new BadRequestError("Invalid update data", errors));
+
+  const { name, email } = req.body;
+  const newData = {};
+  if (!isEmpty(name)) newData.name = name;
+  if (!isEmpty(email)) newData.email = email;
+
+  const user = await User.findOneAndUpdate({ slug: req.params.slug }, newData, {
+    new: true
+  });
+  res.json(user);
 };
 
 module.exports = {
   registerUser,
   getUserInfo,
-  deleteUser
+  deleteUser,
+  updateUser
 };
