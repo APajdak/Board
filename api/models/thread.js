@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const generateSlug = require("../utils/generateSlug");
+const generateSlug = require("../../utils/generateSlug");
 
 const threadSchema = new mongoose.Schema({
   createdAt: {

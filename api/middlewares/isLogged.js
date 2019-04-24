@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
-const { JWT_SECRET } = require("../config/keys");
-const UnauthorizedError = require("../errors/UnauthorizedError");
-const BadRequestError = require("../errors/BadRequestError");
+const { JWT_SECRET } = require("../../config/keys");
+const UnauthorizedError = require("../../errors/UnauthorizedError");
+const BadRequestError = require("../../errors/BadRequestError");
 
 function isLogged(req, res, next) {
   const header = req.get("x-access-token");

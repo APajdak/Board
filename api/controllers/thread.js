@@ -1,8 +1,10 @@
 const { Thread } = require("../models/thread");
 const { Forum } = require("../models/forum");
-const NotFoundError = require("../errors/NotFoundError");
-const BadRequestError = require("../errors/BadRequestError");
+const NotFoundError = require("../../errors/NotFoundError");
+const BadRequestError = require("../../errors/BadRequestError");
 const threadValidation = require("../validation/threadValidation");
+const threadUpdateValidation = require("../validation/updateThread");
+const ForbiddenError = require("../../errors/ForbiddenError");
 
 const getThreadPosts = async (req, res, next) => {
   const thread = await Thread.findOne({ slug: req.params.slug }).populate({
@@ -48,24 +50,22 @@ const deleteThread = async (req, res, next) => {
 };
 
 const updateThread = async (req, res, next) => {
-  if (
-    !req.body.title ||
-    req.body.title.length <= 3 ||
-    req.body.title.length >= 255
-  ) {
-    return res
-      .status(400)
-      .send({ error: "Title is required and must have between 3- 255 chars" });
+  const { author } = await Thread.findById(req.params.id);
+  if (author == req.user._id || req.user.role === "admin") {
+    const { isValid, errors } = threadUpdateValidation(req.body);
+    if (!isValid)
+      return next(new BadRequestError("Invalid thread data", errors));
+
+    const thread = await Thread.findByIdAndUpdate(
+      req.params.id,
+      { title: req.body.title },
+      { new: true }
+    );
+
+    res.json(thread);
+  } else {
+    return next(new ForbiddenError("Access denied."));
   }
-
-  const thread = await Thread.findByIdAndUpdate(
-    req.params.id,
-    { title: req.body.title },
-    { new: true }
-  );
-  if (!thread) return next(new NotFoundError("Thread not found"));
-
-  res.json(thread);
 };
 
 module.exports = {

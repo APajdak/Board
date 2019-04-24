@@ -1,10 +1,11 @@
-const { Post } = require("../models/post");
-const { User } = require("../models/user");
-const { Thread } = require("../models/thread");
-const NotFoundError = require("../errors/NotFoundError");
-const BadRequestError = require("../errors/BadRequestError");
-const ForbiddenError = require("../errors/ForbiddenError");
+const { Post } = require("./../models/post");
+const { User } = require("./../models/user");
+const { Thread } = require("./../models/thread");
+const NotFoundError = require("../../errors/NotFoundError");
+const BadRequestError = require("../../errors/BadRequestError");
+const ForbiddenError = require("../../errors/ForbiddenError");
 const postValidation = require("../validation/postValidation");
+const postUpdateValidation = require("../validation/updatePost");
 
 const getUserPosts = async (req, res, next) => {
   const posts = await User.findOne({ slug: req.params.slug })
@@ -54,8 +55,26 @@ const deletePost = async (req, res, next) => {
   }
 };
 
+const updatePost = async (req, res, next) => {
+  const { author } = await Post.findById(req.params.id);
+  if (author == req.user._id || req.user.role === "admin") {
+    const { isValid, errors } = postUpdateValidation(req.body);
+    if (!isValid) return next(new BadRequestError("Invalid post data", errors));
+
+    const post = await Post.findByIdAndUpdate(
+      req.params.id,
+      { content: req.body.content },
+      { new: true }
+    );
+    res.json(post);
+  } else {
+    return next(new ForbiddenError("Access denied."));
+  }
+};
+
 module.exports = {
   getUserPosts,
   addNewPost,
-  deletePost
+  deletePost,
+  updatePost
 };

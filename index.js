@@ -5,11 +5,11 @@ const volleyball = require("volleyball");
 
 const { CLIENT } = require("./config/keys");
 
-const users = require("./routes/user");
-const threads = require("./routes/thread");
-const posts = require("./routes/post");
-const auth = require("./routes/auth");
-const forum = require("./routes/forum");
+const users = require("./api/routes/user");
+const threads = require("./api/routes/thread");
+const posts = require("./api/routes/post");
+const auth = require("./api/routes/auth");
+const forum = require("./api/routes/forum");
 const errorHandler = require("./errors/errorHandler");
 require("./config/mongoose");
 

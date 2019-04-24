@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { JWT_SECRET } = require("../config/keys");
-const generateSlug = require("../utils/generateSlug");
+const { JWT_SECRET } = require("../../config/keys");
+const generateSlug = require("../../utils/generateSlug");
 
 const userSchema = new mongoose.Schema({
   name: {

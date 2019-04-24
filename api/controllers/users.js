@@ -1,6 +1,6 @@
 const { User } = require("../models/user");
-const BadRequestError = require("../errors/BadRequestError");
-const NotFoundError = require("../errors/NotFoundError");
+const BadRequestError = require("../../errors/BadRequestError");
+const NotFoundError = require("../../errors/NotFoundError");
 const isEmpty = require("../validation/isEmpty");
 const userValidation = require("../validation/registerUser");
 const updateUserValidation = require("../validation/updateUser");

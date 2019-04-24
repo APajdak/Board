@@ -1,6 +1,6 @@
 const { Forum } = require("../models/forum");
-const BadRequestError = require("../errors/BadRequestError");
-const NotFoundError = require("../errors/NotFoundError");
+const BadRequestError = require("../../errors/BadRequestError");
+const NotFoundError = require("../../errors/NotFoundError");
 const forumValidation = require("../validation/forumValidation");
 
 const getForumThreads = async (req, res, next) => {

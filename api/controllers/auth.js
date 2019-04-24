@@ -1,6 +1,6 @@
 const { User } = require("../models/user");
 const bcrypt = require("bcrypt");
-const BadRequestError = require("../errors/BadRequestError");
+const BadRequestError = require("../../errors/BadRequestError");
 const loginValidation = require("../validation/login");
 
 const logIn = async (req, res, next) => {

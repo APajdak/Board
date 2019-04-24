@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const ApplicationError = require("../errors/ApplicationError");
+const ApplicationError = require("../../errors/ApplicationError");
 
 const postSchema = new mongoose.Schema({
   createdAt: {
