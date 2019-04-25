@@ -25,7 +25,6 @@ app.use("/api/forums", forum);
 app.use("/api/auth", auth);
 
 app.use(errorHandler);
-
 const port = process.env.PORT || 4000;
 app.listen(port, () => {
   console.log(`Server is up on port ${port}`);

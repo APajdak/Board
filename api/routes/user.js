@@ -8,7 +8,7 @@ router.post("/", controller.registerUser);
 
 router.get("/:slug", isLogged, controller.getUserInfo);
 
-router.delete("/:slug", isLogged, controller.deleteUser);
+router.delete("/:slug", isLogged, hasPermission, controller.deleteUser);
 
 router.patch("/:slug", isLogged, hasPermission, controller.updateUser);
 
