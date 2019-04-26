@@ -6,8 +6,10 @@ const options = {
   bufferCommands: false
 };
 
-mongoose
-  .connect(MONGODB_URL, options)
-  .then(() => console.log("Connected to DB"))
-  .catch(err => console.log("Could not connect to DB"));
+mongoose.connect(MONGODB_URL, options, err => {
+  if (err) {
+    return console.log("Could not connect to DB");
+  }
+  return console.log("Connected to DB");
+});
 mongoose.set("useCreateIndex", true);

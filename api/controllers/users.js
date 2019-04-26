@@ -19,7 +19,7 @@ const registerUser = async (req, res, next) => {
   await user.save();
 
   const token = user.createToken();
-  res.status("200").send({
+  res.status("201").send({
     name: user.name,
     token
   });
