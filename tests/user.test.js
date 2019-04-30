@@ -1,5 +1,6 @@
 const request = require("supertest");
 const { populateUsers, userOne } = require("./config/populateUsers");
+const { User } = require("../api/models/user");
 let server = require("../index.js");
 
 let token, slug;
@@ -10,7 +11,7 @@ beforeAll(async () => {
   slug = userData.slug;
 });
 
-afterAll(async () => {
+afterAll(() => {
   server.close();
 });
 
