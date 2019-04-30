@@ -5,9 +5,8 @@ const hasProperLength = require("./hasProperLength");
 
 module.exports = ({ name, email }) => {
   const errors = {};
-
   // Name field validation
-  if (!name) {
+  if (name) {
     if (!isString(name)) {
       errors.name = "Name must be a string";
     }
@@ -19,7 +18,7 @@ module.exports = ({ name, email }) => {
     }
   }
   //Email field validation
-  if (!email) {
+  if (email) {
     if (!isString(email)) {
       errors.email = "Email must be a string";
     }
@@ -30,7 +29,6 @@ module.exports = ({ name, email }) => {
       errors.email = "Email field is required";
     }
   }
-
   return {
     errors,
     isValid: isEmpty(errors)

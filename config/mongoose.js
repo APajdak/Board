@@ -12,4 +12,7 @@ mongoose.connect(MONGODB_URL, options, err => {
   }
   return console.log("Connected to DB");
 });
+
+// Get rid of "DeprecationWarning" errors
+mongoose.set("useFindAndModify", false);
 mongoose.set("useCreateIndex", true);

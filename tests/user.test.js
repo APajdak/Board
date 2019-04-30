@@ -1,30 +1,21 @@
 const request = require("supertest");
-const jwt = require("jsonwebtoken");
-const { JWT_SECRET } = require("../config/keys");
-const { User } = require("../api/models/user");
-
+const { populateUsers, userOne } = require("./config/populateUsers");
 let server = require("../index.js");
 
-const validUser = {
-  name: "userOne",
-  email: "userOne@test.com",
-  password: "password"
-};
+let token, slug;
+
+beforeAll(async () => {
+  const userData = await populateUsers();
+  token = userData.token;
+  slug = userData.slug;
+});
+
+afterAll(async () => {
+  server.close();
+});
 
 describe("/api/users", () => {
-  afterEach(async () => {
-    server.close();
-  });
-
   describe("POST /", () => {
-    beforeEach(async () => {
-      await new User(validUser).save();
-    });
-
-    afterEach(async () => {
-      await User.deleteMany();
-    });
-
     it("should signup a new user", async () => {
       await request(server)
         .post("/api/users")
@@ -53,27 +44,12 @@ describe("/api/users", () => {
     it("should NOT singup new user when passed email is already in use", async () => {
       await request(server)
         .post("/api/users")
-        .send(validUser)
+        .send(userOne)
         .expect(400);
     });
   });
 
   describe("GET /:slug", () => {
-    let slug, token;
-    beforeEach(async () => {
-      const user = await new User({
-        name: "TestUser",
-        email: "validUser@test.com",
-        password: "password123"
-      }).save();
-      token = user.createToken();
-      const decoded = jwt.verify(token, JWT_SECRET);
-      slug = decoded.slug;
-    });
-    afterEach(async () => {
-      await User.deleteMany();
-    });
-
     it("should return a valid user object", async () => {
       const { body } = await request(server)
         .get(`/api/users/${slug}`)
@@ -87,6 +63,34 @@ describe("/api/users", () => {
         .get(`/api/users/invalidSlug`)
         .set("x-access-token", `Bearer ${token}`)
         .expect(404);
+    });
+  });
+
+  describe("PATCH /:slug", () => {
+    it("should update a user data", async () => {
+      const { body } = await request(server)
+        .patch(`/api/users/${slug}`)
+        .set("x-access-token", `Bearer ${token}`)
+        .send({
+          name: "update Name",
+          email: "newEmail@test.com"
+        })
+        .expect(200);
+      expect(body.name).toBe("update Name");
+      expect(body.email).toBe("newEmail@test.com");
+    });
+
+    it("should NOT update a user with invalid data", async () => {
+      const { body } = await request(server)
+        .patch(`/api/users/${slug}`)
+        .set("x-access-token", `Bearer ${token}`)
+        .send({
+          name: "1",
+          email: "2"
+        })
+        .expect(400);
+      expect(body.errors.name).toBeDefined();
+      expect(body.errors.email).toBeDefined();
     });
   });
 });
