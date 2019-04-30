@@ -93,4 +93,13 @@ describe("/api/users", () => {
       expect(body.errors.email).toBeDefined();
     });
   });
+
+  describe("DELETE /:slug", () => {
+    it("should delete a user", async () => {
+      await request(server)
+        .delete(`/api/users/${slug}`)
+        .set("x-access-token", `Bearer ${token}`)
+        .expect(200);
+    });
+  });
 });
