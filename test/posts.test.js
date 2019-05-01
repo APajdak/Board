@@ -75,6 +75,26 @@ describe("api/posts", () => {
         .expect(400);
     });
   });
+
+  describe("PATCH /:id", () => {
+    it("should update a post", async () => {
+      const { body } = await request(server)
+        .patch(`/api/posts/${postID}`)
+        .set("x-access-token", `Bearer ${token}`)
+        .send({ content: "Updated content" })
+        .expect(200);
+      expect(body.content).toEqual("Updated content");
+    });
+
+    it("should NOT update a post when invalid data was passed", async () => {
+      await request(server)
+        .patch(`/api/posts/${postID}`)
+        .set("x-access-token", `Bearer ${token}`)
+        .send({ content: "U" })
+        .expect(400);
+    });
+  });
+
   describe("DELETE /:id", () => {
     it("should delete a post", async () => {
       await request(server)
