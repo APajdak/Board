@@ -6,7 +6,7 @@ const expect = require("expect");
 const request = require("supertest");
 const server = require("../index.js");
 
-let forumID, token, threadSlug;
+let forumID, threadID, token, threadSlug;
 
 describe("/api/threads", () => {
   before(async () => {
@@ -17,6 +17,7 @@ describe("/api/threads", () => {
     token = userData.token;
     threadSlug = slug;
     forumID = forumId;
+    threadID = threadId;
   });
   after(() => {
     server.close();
@@ -59,6 +60,24 @@ describe("/api/threads", () => {
       await request(server)
         .get(`/api/threads/invalidSlug`)
         .expect(404);
+    });
+  });
+
+  describe("PATCH /:id", () => {
+    it(`should update a thread's title`, async () => {
+      const { body } = await request(server)
+        .patch(`/api/threads/${threadID}`)
+        .set("x-access-token", `Bearer ${token}`)
+        .send({ title: "Updated title" })
+        .expect(200);
+      expect(body.title).toEqual("Updated title");
+    });
+    it(`should not update a thread`, async () => {
+      await request(server)
+        .patch(`/api/threads/${threadID}`)
+        .set("x-access-token", `Bearer ${token}`)
+        .send({ title: "U" })
+        .expect(400);
     });
   });
 });
