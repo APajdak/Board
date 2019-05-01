@@ -1,18 +1,21 @@
 const { populateForum } = require("./config/populateForum");
 const { populateThread } = require("./config/populateThread");
+const { populatePost } = require("./config/populatePost");
 const { populateUsers } = require("./config/populateUsers");
 const expect = require("expect");
 const request = require("supertest");
 const server = require("../index.js");
 
-let forumID, token;
+let forumID, token, threadSlug;
 
 describe("/api/threads", () => {
   before(async () => {
     const userData = await populateUsers();
     const { forumId } = await populateForum();
-    await populateThread(forumId, userData.authorId);
+    const { threadId, slug } = await populateThread(forumId, userData.authorId);
+    await populatePost(userData.authorId, threadId);
     token = userData.token;
+    threadSlug = slug;
     forumID = forumId;
   });
   after(() => {
@@ -42,6 +45,20 @@ describe("/api/threads", () => {
         .expect(400);
       expect(body.errors.title).toBeDefined();
       expect(body.errors.forumId).toBeDefined();
+    });
+  });
+  describe("GET /:slug", () => {
+    it(`should return all thread's posts`, async () => {
+      const { body } = await request(server)
+        .get(`/api/threads/${threadSlug}`)
+        .expect(200);
+      expect(body.posts.length).toBe(1);
+      expect(body.author).toBeDefined();
+    });
+    it(`should not return thread's posts`, async () => {
+      await request(server)
+        .get(`/api/threads/invalidSlug`)
+        .expect(404);
     });
   });
 });

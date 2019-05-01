@@ -1,7 +1,7 @@
 const { User } = require("../../api/models/user");
 
 const userOne = {
-  name: "Populateusers",
+  name: "Populate User",
   email: "Populateusers@test.com",
   password: "Populateusers"
 };

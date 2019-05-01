@@ -1,7 +1,7 @@
 const { Forum } = require("../../api/models/forum");
 
 const forumData = {
-  name: "Testing forsum"
+  name: "Populate forum"
 };
 
 const populateForum = () => {

@@ -1,7 +1,7 @@
 const { Thread } = require("../../api/models/thread");
 
 const threadData = {
-  title: "Testing threads"
+  title: "Populate Thread"
 };
 
 const populateThread = (forumId, authorId) => {
@@ -14,7 +14,7 @@ const populateThread = (forumId, authorId) => {
     try {
       await Thread.deleteMany();
       const thread = await newThread.save();
-      return resolve({ threadId: thread._id });
+      return resolve({ threadId: thread._id, slug: thread.slug });
     } catch (error) {
       return reject(error);
     }

@@ -1,7 +1,7 @@
 const { Post } = require("../../api/models/post");
 
 const postData = {
-  content: "Testing posts"
+  content: "Populate posts"
 };
 
 const populatePost = (authorId, threadId) => {
