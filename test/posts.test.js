@@ -75,4 +75,18 @@ describe("api/posts", () => {
         .expect(400);
     });
   });
+  describe("DELETE /:id", () => {
+    it("should delete a post", async () => {
+      await request(server)
+        .delete(`/api/posts/${postID}`)
+        .set("x-access-token", `Bearer ${token}`)
+        .expect(200);
+    });
+    it("should NOT delete a post", async () => {
+      await request(server)
+        .delete(`/api/posts/invalidID`)
+        .set("x-access-token", `Bearer ${token}`)
+        .expect(404);
+    });
+  });
 });
