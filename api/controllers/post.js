@@ -47,7 +47,8 @@ const deletePost = async (req, res, next) => {
   if (!post) {
     return next(new NotFoundError("Post with the given ID was not found."));
   }
-  if (req.user._id === post._id || req.user.role === "admin") {
+
+  if (req.user._id == post.author || req.user.role === "admin") {
     await post.remove();
     res.send(post);
   } else {

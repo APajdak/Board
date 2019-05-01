@@ -4,7 +4,7 @@ const postData = {
   content: "Testing posts"
 };
 
-const populatePost = (threadId, authorId) => {
+const populatePost = (authorId, threadId) => {
   return new Promise(async (resolve, reject) => {
     const newPost = new Post({
       ...postData,

@@ -1,21 +1,18 @@
-const request = require("supertest");
 const { populateUsers, userOne } = require("./config/populateUsers");
-const { User } = require("../api/models/user");
-let server = require("../index.js");
-
+const expect = require("expect");
+const request = require("supertest");
+const server = require("../index.js");
 let token, slug;
 
-beforeAll(async () => {
-  const userData = await populateUsers();
-  token = userData.token;
-  slug = userData.slug;
-});
-
-afterAll(() => {
-  server.close();
-});
-
 describe("/api/users", () => {
+  before(async () => {
+    const userData = await populateUsers();
+    token = userData.token;
+    slug = userData.slug;
+  });
+  after(() => {
+    server.close();
+  });
   describe("POST /", () => {
     it("should signup a new user", async () => {
       await request(server)
@@ -77,6 +74,7 @@ describe("/api/users", () => {
           email: "newEmail@test.com"
         })
         .expect(200);
+
       expect(body.name).toBe("update Name");
       expect(body.email).toBe("newEmail@test.com");
     });
@@ -101,6 +99,13 @@ describe("/api/users", () => {
         .delete(`/api/users/${slug}`)
         .set("x-access-token", `Bearer ${token}`)
         .expect(200);
+    });
+
+    it("should NOT delete a user", async () => {
+      await request(server)
+        .delete(`/api/users/invalidData`)
+        .set("x-access-token", `Bearer ${token}`)
+        .expect(403);
     });
   });
 });
