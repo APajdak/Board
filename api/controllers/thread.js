@@ -34,7 +34,7 @@ const addNewThread = async (req, res, next) => {
 
   await thread.save();
 
-  res.status("200").send({
+  res.status("200").json({
     id: thread._id,
     title: thread.title
   });

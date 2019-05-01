@@ -22,6 +22,7 @@ module.exports = ({ title, forumId, authorId }) => {
   if (!ObjectId.isValid(forumId)) {
     errors.forumId = "ForumId is invalid";
   }
+
   // Author Id validation
   if (!ObjectId.isValid(authorId)) {
     errors.authorId = "AuthorId is invalid";
