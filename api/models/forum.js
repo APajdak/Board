@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const generateSlug = require("../../utils/generateSlug");
 
 const forumSchema = new mongoose.Schema({
   name: {
@@ -24,8 +23,9 @@ const forumSchema = new mongoose.Schema({
 });
 
 forumSchema.pre("save", function(next) {
+  const { Slug } = require("../../index.js");
   const forum = this;
-  forum.slug = generateSlug(forum.name);
+  forum.slug = Slug.addSlug(forum.name);
   next();
 });
 

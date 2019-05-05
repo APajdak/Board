@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const generateSlug = require("../../utils/generateSlug");
 
 const threadSchema = new mongoose.Schema({
   createdAt: {
@@ -55,8 +54,9 @@ const threadSchema = new mongoose.Schema({
 });
 
 threadSchema.pre("save", function(next) {
+  const { Slug } = require("../../index.js");
   const thread = this;
-  thread.slug = generateSlug(thread.title);
+  thread.slug = Slug.addSlug(thread.title);
   thread
     .model("Forum")
     .updateOne({ _id: thread.forum }, { $push: { threads: thread._id } }, next);

@@ -4,7 +4,7 @@ const { populateUsers } = require("./config/populateUsers");
 const { populatePost } = require("./config/populatePost");
 const expect = require("expect");
 const request = require("supertest");
-const server = require("../index.js");
+const { server } = require("../index.js");
 const mongoose = require("mongoose");
 
 let threadID, token, userSlug, postID;

@@ -17,10 +17,11 @@ const slugs = [
 
 describe("Generate slug", () => {
   it("should add slugs", () => {
+    const currentSize = slug.slugs.size;
     for (let string of slugs) {
       slug.addSlug(string);
     }
-    expect(slug.slugs.size).toBe(10);
+    expect(slug.slugs.size).toBe(currentSize + 10);
   });
 
   it("should return a slug", () => {

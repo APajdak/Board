@@ -1,7 +1,7 @@
 const { populateUsers, userOne } = require("./config/populateUsers");
 const expect = require("expect");
 const request = require("supertest");
-const server = require("../index.js");
+const { server } = require("../index.js");
 let token, slug;
 
 describe("/api/users", () => {

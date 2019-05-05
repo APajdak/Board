@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = require("../../config/keys");
-const generateSlug = require("../../utils/generateSlug");
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -49,12 +48,13 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.pre("save", async function(next) {
+  const { Slug } = require("../../index.js");
   const user = this;
   try {
     const salt = await bcrypt.genSalt(10);
     const cryptedPassword = await bcrypt.hash(user.password, salt);
     user.password = cryptedPassword;
-    user.slug = generateSlug(user.name);
+    user.slug = Slug.addSlug(user.name);
     next();
   } catch (ex) {
     return next(ex);

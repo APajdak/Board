@@ -61,6 +61,7 @@ postSchema.post("remove", function(next) {
     .findOne({ _id: this.thread })
     .exec(async (err, thread) => {
       if (err) return next(new ApplicationError());
+      if (!thread) return next;
       if (this._id.equals(thread.latestUpdate.postId)) {
         try {
           const newPost = await this.model("Post").findOne({

@@ -1,6 +1,7 @@
 class Slug {
   constructor() {
     this.slugs = new Set();
+    this.getSlugsFromDB();
   }
 
   addSlug(str) {
@@ -18,6 +19,24 @@ class Slug {
       .toString()
       .substring(1);
     return `${randomCode}-${str}`;
+  }
+
+  async getSlugsFromDB() {
+    const { Forum } = require("../api/models/forum");
+    const { Thread } = require("../api/models/thread");
+    const { User } = require("../api/models/user");
+
+    const slugsFromDB = [];
+
+    slugsFromDB.push(await Forum.find({}).select("slug -_id"));
+    slugsFromDB.push(await Thread.find({}).select("slug -_id"));
+    slugsFromDB.push(await User.find({}).select("slug -_id"));
+
+    for (let key in slugsFromDB) {
+      for (let innerKey in slugsFromDB[key]) {
+        this.slugs.add(slugsFromDB[key][innerKey].slug);
+      }
+    }
   }
 }
 

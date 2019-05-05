@@ -4,7 +4,7 @@ const { populatePost } = require("./config/populatePost");
 const { populateUsers } = require("./config/populateUsers");
 const expect = require("expect");
 const request = require("supertest");
-const server = require("../index.js");
+const { server } = require("../index.js");
 
 let forumID, threadID, token, threadSlug;
 
@@ -78,6 +78,21 @@ describe("/api/threads", () => {
         .set("x-access-token", `Bearer ${token}`)
         .send({ title: "U" })
         .expect(400);
+    });
+  });
+
+  describe("DELETE /:id", () => {
+    it("should delete a thread", async () => {
+      await request(server)
+        .delete(`/api/threads/${threadID}`)
+        .set("x-access-token", `Bearer ${token}`)
+        .expect(200);
+    });
+    it("should NOT delete a thread", async () => {
+      await request(server)
+        .delete(`/api/threads/invalidId`)
+        .set("x-access-token", `Bearer ${token}`)
+        .expect(404);
     });
   });
 });

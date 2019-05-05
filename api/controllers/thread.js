@@ -45,8 +45,12 @@ const deleteThread = async (req, res, next) => {
   if (!thread) {
     return next(new NotFoundError("Thread with the given ID was not found."));
   }
-  await thread.remove();
-  res.send(thread);
+  if (thread.author == req.user._id || req.user.role === "admin") {
+    await thread.remove();
+    res.send(thread);
+  } else {
+    return next(new ForbiddenError("Access denied."));
+  }
 };
 
 const updateThread = async (req, res, next) => {
