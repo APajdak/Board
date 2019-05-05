@@ -8,13 +8,6 @@ const { server } = require("../index.js");
 const mongoose = require("mongoose");
 
 let threadID, token, userSlug, postID;
-
-// const validUser = {
-//   name: "validUser",
-//   email: "validUser@tsest.com",
-//   password: "validUser"
-// };
-
 describe("api/posts", () => {
   before(async () => {
     mongoose.models = {};
