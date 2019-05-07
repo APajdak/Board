@@ -12,11 +12,12 @@ const INITIAL_STATE = {
 export default function(state = INITIAL_STATE, action) {
   switch (action.type) {
     case AUTH_USER:
+      console.log(action);
       return {
         ...state,
         errorMessage: "",
         authenticated: action.payload.token,
-        user: action.payload.user
+        user: JSON.parse(localStorage.getItem("user"))
       };
     case AUTH_ERROR:
       return { ...state, errorMessage: action.payload, authenticated: "" };

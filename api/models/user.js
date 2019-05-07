@@ -63,7 +63,7 @@ userSchema.pre("save", async function(next) {
 
 userSchema.methods.createToken = function() {
   return jwt.sign(
-    { _id: this._id, role: this.role, slug: this.slug },
+    { _id: this._id, role: this.role, slug: this.slug, name: this.name },
     JWT_SECRET
   );
 };

@@ -1,15 +1,15 @@
 import { AUTH_USER, AUTH_ERROR } from "./actionTypes";
 import API from "../config/axiosConfig";
+import Auth from "../utils/Auth";
 
 export const signup = (
   { name, email, password },
   callback
 ) => async dispatch => {
   try {
-    const response = await API.post("/users/", { name, email, password });
-    localStorage.setItem("token", response.data.token);
-    localStorage.setItem("user", JSON.stringify(response.data.user));
-    dispatch({ type: AUTH_USER, payload: response.data });
+    const { data } = await API.post("/users/", { name, email, password });
+    Auth.saveData(data.token);
+    dispatch({ type: AUTH_USER, payload: data });
     callback();
   } catch (ex) {
     dispatch({ type: AUTH_ERROR, payload: "User already exist" });
@@ -18,10 +18,9 @@ export const signup = (
 
 export const signin = ({ email, password }, callback) => async dispatch => {
   try {
-    const response = await API.post("/auth/", { email, password });
-    localStorage.setItem("token", response.data.token);
-    localStorage.setItem("user", JSON.stringify(response.data.user));
-    dispatch({ type: AUTH_USER, payload: response.data });
+    const { data } = await API.post("/auth/", { email, password });
+    Auth.saveData(data.token);
+    dispatch({ type: AUTH_USER, payload: data });
     callback();
   } catch (ex) {
     dispatch({ type: AUTH_ERROR, payload: "Invalid email or password" });
@@ -29,8 +28,7 @@ export const signin = ({ email, password }, callback) => async dispatch => {
 };
 
 export const signout = callback => {
-  localStorage.removeItem("token");
-  localStorage.removeItem("user");
+  Auth.deleteData();
   callback();
   return {
     type: AUTH_USER,

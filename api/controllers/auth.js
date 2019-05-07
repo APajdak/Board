@@ -16,7 +16,7 @@ const logIn = async (req, res, next) => {
 
   const token = user.createToken();
 
-  res.json({ name: user.name, token });
+  res.json({ token });
 };
 module.exports = {
   logIn
