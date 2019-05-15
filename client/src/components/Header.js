@@ -5,7 +5,6 @@ import { connect } from "react-redux";
 class Header extends React.Component {
   renderLinks() {
     if (this.props.authenticated) {
-      //console.log(this.props);
       return (
         <div>
           <span>
@@ -28,11 +27,15 @@ class Header extends React.Component {
   }
 
   render() {
-    return <div>{this.renderLinks()}</div>;
+    return (
+      <div className="row">
+        <div className="col-sm-8">Discussion Board</div>
+        <div className="col-sm-4">{this.renderLinks()}</div>
+      </div>
+    );
   }
 }
 function mapStateToProps(state) {
-  console.log(state);
   return { authenticated: state.auth.authenticated, user: state.auth.user };
 }
 
