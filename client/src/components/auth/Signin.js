@@ -41,10 +41,14 @@ class Signin extends Component {
     const { handleSubmit } = this.props;
 
     return (
-      <form onSubmit={handleSubmit(this.onSubmit)}>
+      <form
+        onSubmit={handleSubmit(this.onSubmit)}
+        className="container"
+        style={{ width: "40%" }}
+      >
         {this.renderFields()}
-        <div>{this.props.errorMessage}</div>
-        <button>Sign in</button>
+        <div className="text-danger">{this.props.errorMessage}</div>
+        <button className="btn btn-secondary btn-lg btn-block">Sign in</button>
       </form>
     );
   }
