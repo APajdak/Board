@@ -4,7 +4,7 @@ import Header from "./Header";
 class App extends Component {
   render() {
     return (
-      <div className="container">
+      <div className="container mt-4">
         <Header />
         {this.props.children}
       </div>
