@@ -4,7 +4,7 @@ const UnauthorizedError = require("../../errors/UnauthorizedError");
 const BadRequestError = require("../../errors/BadRequestError");
 
 function isLogged(req, res, next) {
-  const header = req.get("x-access-token");
+  const header = req.get("AuthToken");
   if (header) {
     var token = header.split(" ")[1];
   } else {

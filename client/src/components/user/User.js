@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import isLogged from "../auth";
-import API from "../../config/axiosConfig";
+import API from "../../utils/BoardApi";
 import UserInfo from "./UserInfo";
 import UserPostList from "./UserPostList";
 
@@ -12,18 +12,16 @@ class User extends Component {
 
   async componentDidMount() {
     try {
-      var { data } = await API.get(`/users/${this.props.match.params.slug}`, {
-        headers: { "x-access-token": `Bearer ${this.props.auth}` }
-      });
+      var { data } = await API.get(`/users/${this.props.match.params.slug}`);
       this.setState({ user: data });
     } catch (ex) {
-      this.setState({ error: ex.response.data });
+      this.setState({ error: ex.response.data.message });
     }
   }
 
   fetchPosts = async () => {
     const { data } = await API.get(`/posts/${this.state.user.slug}`, {
-      headers: { "x-access-token": `Bearer ${this.props.auth}` }
+      headers: { AuthToken: `Bearer ${this.props.auth}` }
     });
     this.setState({ posts: data.posts });
   };

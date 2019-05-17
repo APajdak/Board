@@ -1,5 +1,5 @@
 import { AUTH_USER, AUTH_ERROR } from "./actionTypes";
-import API from "../config/axiosConfig";
+import API from "../utils/BoardApi";
 import Auth from "../utils/Auth";
 
 export const signup = (

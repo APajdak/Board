@@ -16,7 +16,6 @@ describe("api/auth", () => {
         .post("/api/auth")
         .send({ email: "Populateusers@test.com", password: "Populateusers" })
         .expect(200);
-      expect(body.name).toEqual("Populate User");
       expect(body.token).toBeDefined();
     });
     it("should NOT login when wrong data was passed", async () => {

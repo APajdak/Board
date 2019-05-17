@@ -29,7 +29,7 @@ describe("api/posts", () => {
     it("should add new Post", async () => {
       await request(server)
         .post("/api/posts")
-        .set("x-access-token", `Bearer ${token}`)
+        .set("AuthToken", `Bearer ${token}`)
         .send({
           content: "New Post test",
           threadId: threadID
@@ -40,7 +40,7 @@ describe("api/posts", () => {
     it("should NOT add a new Post when invalid data passed", async () => {
       const { body } = await request(server)
         .post("/api/posts")
-        .set("x-access-token", `Bearer ${token}`)
+        .set("AuthToken", `Bearer ${token}`)
         .send({
           content: "s",
           threadId: "invalidObjectId"
@@ -55,7 +55,7 @@ describe("api/posts", () => {
     it("should return all user posts", async () => {
       const { body } = await request(server)
         .get(`/api/posts/${userSlug}`)
-        .set("x-access-token", `Bearer ${token}`)
+        .set("AuthToken", `Bearer ${token}`)
         .expect(200);
 
       expect(body.posts).toBeDefined();
@@ -64,7 +64,7 @@ describe("api/posts", () => {
     it("should NOT return all user posts", async () => {
       await request(server)
         .get(`/api/posts/invalidSlug`)
-        .set("x-access-token", `Bearer ${token}`)
+        .set("AuthToken", `Bearer ${token}`)
         .expect(400);
     });
   });
@@ -73,7 +73,7 @@ describe("api/posts", () => {
     it("should update a post", async () => {
       const { body } = await request(server)
         .patch(`/api/posts/${postID}`)
-        .set("x-access-token", `Bearer ${token}`)
+        .set("AuthToken", `Bearer ${token}`)
         .send({ content: "Updated content" })
         .expect(200);
       expect(body.content).toEqual("Updated content");
@@ -82,7 +82,7 @@ describe("api/posts", () => {
     it("should NOT update a post when invalid data was passed", async () => {
       await request(server)
         .patch(`/api/posts/${postID}`)
-        .set("x-access-token", `Bearer ${token}`)
+        .set("AuthToken", `Bearer ${token}`)
         .send({ content: "U" })
         .expect(400);
     });
@@ -92,13 +92,13 @@ describe("api/posts", () => {
     it("should delete a post", async () => {
       await request(server)
         .delete(`/api/posts/${postID}`)
-        .set("x-access-token", `Bearer ${token}`)
+        .set("AuthToken", `Bearer ${token}`)
         .expect(200);
     });
     it("should NOT delete a post", async () => {
       await request(server)
         .delete(`/api/posts/invalidID`)
-        .set("x-access-token", `Bearer ${token}`)
+        .set("AuthToken", `Bearer ${token}`)
         .expect(404);
     });
   });

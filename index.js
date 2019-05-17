@@ -20,7 +20,7 @@ const app = express();
 const port = process.env.PORT || 4000;
 
 app.use(express.json());
-app.use(cors({ origin: CLIENT, exposedHeaders: "x-access-token" }));
+app.use(cors({ origin: CLIENT, exposedHeaders: "AuthToken" }));
 if (process.env.NODE_ENV !== "test") {
   app.use(volleyball);
 }

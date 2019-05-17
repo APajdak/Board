@@ -51,7 +51,7 @@ describe("/api/users", () => {
     it("should return a valid user object", async () => {
       const { body } = await request(server)
         .get(`/api/users/${slug}`)
-        .set("x-access-token", `Bearer ${token}`)
+        .set("AuthToken", `Bearer ${token}`)
         .expect(200);
       expect(body.slug).toBe(slug);
     });
@@ -59,7 +59,7 @@ describe("/api/users", () => {
     it("should NOT return user", async () => {
       await request(server)
         .get(`/api/users/invalidSlug`)
-        .set("x-access-token", `Bearer ${token}`)
+        .set("AuthToken", `Bearer ${token}`)
         .expect(404);
     });
   });
@@ -68,7 +68,7 @@ describe("/api/users", () => {
     it("should update a user data", async () => {
       const { body } = await request(server)
         .patch(`/api/users/${slug}`)
-        .set("x-access-token", `Bearer ${token}`)
+        .set("AuthToken", `Bearer ${token}`)
         .send({
           name: "update Name",
           email: "newEmail@test.com"
@@ -82,7 +82,7 @@ describe("/api/users", () => {
     it("should NOT update a user with invalid data", async () => {
       const { body } = await request(server)
         .patch(`/api/users/${slug}`)
-        .set("x-access-token", `Bearer ${token}`)
+        .set("AuthToken", `Bearer ${token}`)
         .send({
           name: "1",
           email: "2"
@@ -97,14 +97,14 @@ describe("/api/users", () => {
     it("should delete a user", async () => {
       await request(server)
         .delete(`/api/users/${slug}`)
-        .set("x-access-token", `Bearer ${token}`)
+        .set("AuthToken", `Bearer ${token}`)
         .expect(200);
     });
 
     it("should NOT delete a user", async () => {
       await request(server)
         .delete(`/api/users/invalidData`)
-        .set("x-access-token", `Bearer ${token}`)
+        .set("AuthToken", `Bearer ${token}`)
         .expect(403);
     });
   });

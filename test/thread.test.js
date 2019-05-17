@@ -27,7 +27,7 @@ describe("/api/threads", () => {
     it("should add a new Thread", async () => {
       const response = await request(server)
         .post("/api/threads")
-        .set("x-access-token", `Bearer ${token}`)
+        .set("AuthToken", `Bearer ${token}`)
         .send({
           forumId: forumID,
           title: "Adding new thread test"
@@ -38,7 +38,7 @@ describe("/api/threads", () => {
     it("should NOT add a new Thread", async () => {
       const { body } = await request(server)
         .post("/api/threads")
-        .set("x-access-token", `Bearer ${token}`)
+        .set("AuthToken", `Bearer ${token}`)
         .send({
           forumId: "a",
           title: "A"
@@ -67,7 +67,7 @@ describe("/api/threads", () => {
     it(`should update a thread's title`, async () => {
       const { body } = await request(server)
         .patch(`/api/threads/${threadID}`)
-        .set("x-access-token", `Bearer ${token}`)
+        .set("AuthToken", `Bearer ${token}`)
         .send({ title: "Updated title" })
         .expect(200);
       expect(body.title).toEqual("Updated title");
@@ -75,7 +75,7 @@ describe("/api/threads", () => {
     it(`should not update a thread`, async () => {
       await request(server)
         .patch(`/api/threads/${threadID}`)
-        .set("x-access-token", `Bearer ${token}`)
+        .set("AuthToken", `Bearer ${token}`)
         .send({ title: "U" })
         .expect(400);
     });
@@ -85,13 +85,13 @@ describe("/api/threads", () => {
     it("should delete a thread", async () => {
       await request(server)
         .delete(`/api/threads/${threadID}`)
-        .set("x-access-token", `Bearer ${token}`)
+        .set("AuthToken", `Bearer ${token}`)
         .expect(200);
     });
     it("should NOT delete a thread", async () => {
       await request(server)
         .delete(`/api/threads/invalidId`)
-        .set("x-access-token", `Bearer ${token}`)
+        .set("AuthToken", `Bearer ${token}`)
         .expect(404);
     });
   });

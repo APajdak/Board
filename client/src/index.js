@@ -15,6 +15,7 @@ import Signup from "./components/auth/Signup";
 import User from "./components/user/User";
 
 const store = createStore(reducers, {}, applyMiddleware(reduxThunk));
+console.log(store.getState());
 
 ReactDOM.render(
   <Provider store={store}>
