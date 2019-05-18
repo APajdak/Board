@@ -3,27 +3,38 @@ import printDate from "../../utils/printDate";
 
 class UserInfo extends Component {
   render() {
-    const { name, email, registeredAt, posts } = this.props.user;
+    const { name, role, registeredAt, posts } = this.props.user;
     return (
-      <div>
-        <div>
-          User Name: <span>{name}</span>
-        </div>
-        <div>
-          Email: <span>{email}</span>
-        </div>
-        <div>
-          Joined: <span>{printDate(registeredAt)}</span>
-        </div>
-        <div>
-          Posts:
-          {posts.length ? (
-            <span onClick={this.props.fetchPosts}>{posts.length}</span>
-          ) : (
-            <span>{posts.length}</span>
-          )}
-        </div>
-      </div>
+      <table
+        className="table table-active text-center mb-5"
+        style={{ width: "75%", margin: "auto" }}
+      >
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Joined</th>
+            <th scope="col">Role</th>
+            <th scope="col">Posts</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{name}</td>
+            <td>{printDate(registeredAt)}</td>
+            <td>{role}</td>
+            {posts.length ? (
+              <td onClick={this.props.fetchPosts}>
+                <u style={{ cursor: "pointer" }}>
+                  {" "}
+                  fetch all posts [{posts.length}]
+                </u>
+              </td>
+            ) : (
+              <td>{posts.length}</td>
+            )}
+          </tr>
+        </tbody>
+      </table>
     );
   }
 }

@@ -28,7 +28,7 @@ class User extends Component {
 
   render() {
     return (
-      <div>
+      <div className="container">
         {this.state.error ? (
           <div>{this.state.error}</div>
         ) : this.state.user ? (

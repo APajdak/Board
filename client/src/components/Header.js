@@ -11,6 +11,7 @@ class Header extends React.Component {
           <span className="mr-4">
             <Link
               to={`/profile/${this.props.user.slug}`}
+              onClick={() => window.location.refresh()}
               style={{ textDecoration: "none" }}
             >
               {this.props.user.name}

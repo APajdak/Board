@@ -6,6 +6,9 @@ export default dateStr => {
   const y = date.getFullYear();
   const h = date.getHours();
   const min = date.getMinutes();
-  const s = date.getSeconds();
-  return `${h}:${min}:${s} ${d}/${m}/${y}`;
+  const s =
+    date.getSeconds() + 1 < 10
+      ? `0${date.getSeconds() + 1}`
+      : date.getSeconds();
+  return `${d}/${m}/${y} ${h}:${min}:${s}`;
 };
