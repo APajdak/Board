@@ -25,7 +25,6 @@ class UserInfo extends Component {
             {posts.length ? (
               <td onClick={this.props.fetchPosts}>
                 <u style={{ cursor: "pointer" }}>
-                  {" "}
                   fetch all posts [{posts.length}]
                 </u>
               </td>
