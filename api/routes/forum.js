@@ -4,6 +4,8 @@ const router = express.Router();
 const controller = require("../controllers/forum");
 const isLogged = require("../middlewares/isLogged");
 
+router.get("/", controller.getForums);
+
 router.get("/:slug", controller.getForumThreads);
 
 router.post("/", isLogged, controller.addNewForum);

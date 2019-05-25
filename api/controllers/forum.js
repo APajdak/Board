@@ -3,6 +3,12 @@ const BadRequestError = require("../../errors/BadRequestError");
 const NotFoundError = require("../../errors/NotFoundError");
 const forumValidation = require("../validation/forumValidation");
 
+const getForums = async (req, res, next) => {
+  const forums = await Forum.find().select("name slug -_id");
+  if (!forums) return next(new NotFoundError("Forums not found"));
+  res.send(forums);
+};
+
 const getForumThreads = async (req, res, next) => {
   const forum = await Forum.findOne({ slug: req.params.slug })
     .select("_id")
@@ -42,5 +48,6 @@ const addNewForum = async (req, res, next) => {
 
 module.exports = {
   getForumThreads,
-  addNewForum
+  addNewForum,
+  getForums
 };
