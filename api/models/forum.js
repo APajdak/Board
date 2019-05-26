@@ -8,6 +8,11 @@ const forumSchema = new mongoose.Schema({
     minlength: 3,
     maxlength: 255
   },
+  category: {
+    type: String,
+    required: true,
+    trim: true
+  },
   slug: {
     type: String,
     trim: true,
