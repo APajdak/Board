@@ -37,7 +37,7 @@ const addNewForum = async (req, res, next) => {
   const { isValid, errors } = forumValidation(req.body);
   if (!isValid) return next(new BadRequestError("Invalid data", errors));
 
-  const forum = new Forum({ name: req.body.name });
+  const forum = new Forum({ name: req.body.name, category: req.body.category });
   await forum.save();
 
   res.status("200").send({
