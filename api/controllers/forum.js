@@ -46,6 +46,8 @@ const addNewForum = async (req, res, next) => {
   });
 };
 
+const updateForum = async (req, res, next) => {};
+
 module.exports = {
   getForumThreads,
   addNewForum,

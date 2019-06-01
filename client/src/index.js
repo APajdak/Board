@@ -21,9 +21,9 @@ ReactDOM.render(
   <Provider store={store}>
     <BrowserRouter>
       <App>
-        <Route path="/signin" exact component={Signin} />
+        <Route path="/signin" component={Signin} />
         <Route path="/signout" component={Signout} />
-        <Route path="/signup" exact component={Signup} />
+        <Route path="/signup" component={Signup} />
         <Route path="/profile/:slug" component={User} />
       </App>
     </BrowserRouter>
