@@ -2,6 +2,7 @@ const { Forum } = require("../models/forum");
 const BadRequestError = require("../../errors/BadRequestError");
 const NotFoundError = require("../../errors/NotFoundError");
 const forumValidation = require("../validation/forumValidation");
+const updateForumValidation = require("../validation/updateForum");
 
 const getForums = async (req, res, next) => {
   const forums = await Forum.find().select("name slug -_id");
@@ -46,10 +47,22 @@ const addNewForum = async (req, res, next) => {
   });
 };
 
-const updateForum = async (req, res, next) => {};
+const updateForum = async (req, res, next) => {
+  const { isValid, errors } = updateForumValidation(req.body);
+  if (!isValid) return next(new BadRequestError("Invalid thread data", errors));
+
+  const forum = await Forum.findOne({ slug: req.params.slug });
+  if (!forum) return next(new NotFoundError("Forum not found"));
+
+  forum.name = req.body.name;
+  await forum.save();
+
+  res.json(forum);
+};
 
 module.exports = {
   getForumThreads,
   addNewForum,
+  updateForum,
   getForums
 };

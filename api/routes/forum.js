@@ -11,6 +11,6 @@ router.get("/:slug", controller.getForumThreads);
 
 router.post("/", isLogged, controller.addNewForum);
 
-router.patch("/:slug", isLogged, isAdmin, controller.addNewForum);
+router.patch("/:slug", isLogged, isAdmin, controller.updateForum);
 
 module.exports = router;
