@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@githubprimer/octicons-react": "^8.5.0",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "bootswatch": "^4.3.1",
     "jwt-decode": "^2.2.0",
     "open-iconic": "^1.1.1",
